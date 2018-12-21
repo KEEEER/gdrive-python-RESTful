@@ -10,10 +10,10 @@ import argparse
 import httplib2
 import urllib.request
 
-token = "ya29.Glt1Bjy4YjzNUmMz0ddUeO243QzdNkdBDJWYiQfrKV0HL08PcdmRxBmz5Wq1l7TDhpxLyQ2WYleYQK717ecprizcAD1oLUiuvRCz6-t5oCXZA8eV6UWFZt5aG8__"
-client_id = "493931895705-8q3n3nnenbk8nmctplqqmla94qhk3mk5.apps.googleusercontent.com"
-client_secret = "GMBfcLDH5zaJCGk8QrolfovI"
-refresh_token = "1/6ZVcveDQhMduLVqR3ZeYU8AZIArkgla-Wj8adJX391w"
+token = ""
+client_id = ""
+client_secret = ""
+refresh_token = ""
 
 def auth(tokens , scopes):
     credentials = Credentials(tokens,refresh_token,None,None,client_id,client_secret,None)

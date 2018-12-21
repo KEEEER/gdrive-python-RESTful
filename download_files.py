@@ -4,9 +4,9 @@ import httplib2
 import requests
 import os
 
-client_id = "493931895705-8q3n3nnenbk8nmctplqqmla94qhk3mk5.apps.googleusercontent.com"
-client_secret = "GMBfcLDH5zaJCGk8QrolfovI"
-refresh_token = "1/6ZVcveDQhMduLVqR3ZeYU8AZIArkgla-Wj8adJX391w"
+client_id = ""
+client_secret = ""
+refresh_token = ""
 
 def auth():
     credentials = GoogleCredentials(None,client_id,client_secret,
