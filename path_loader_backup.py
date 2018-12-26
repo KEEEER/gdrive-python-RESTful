@@ -76,6 +76,7 @@ def downloadDriveItem(cred):
         #get unhidden item id and name
         for item in metadata['files']:
             store[item['id']] = item['name']
+            print(item['modifiedTime'])
         #get hidden items
         for item in metadata['files']:
             if 'parents' in item:
@@ -107,12 +108,11 @@ def read_properties(name):
                 if 'client_secret' == name:
                     client_secret = str(value)                    
                 if 'refresh_token' == name:
-                    refresh_token = str(value)
-                    
+                    refresh_token = str(value)                 
     f.close()
     return
-def main():
 
+def main():
     read_properties('local.properties')
     newCred = auth()
     newCred = refresh(newCred)
