@@ -9,3 +9,5 @@ download google drive files (include empty folders)
     refresh_token = your refresh_token
 
     (do not write : client_id = "********")
+# Version
+    1.0
