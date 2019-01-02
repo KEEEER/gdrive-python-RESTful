@@ -2,16 +2,19 @@ import requests
 import os.path
 
 database = 'https://www.googleapis.com/drive/v3/files'
+params = {
+    'access_token' : "no",
+    'fields' : "*"
+}
 
 #Class==================================================================================
 class Metadata:
-    def __init__(self , params):
-        self.params = params
-        paramst = params
+    def __init__(self , access_token):
+        params['access_token'] = access_token
 
     def get_user_data_info(self):
         datas=[]
-        metadata = requests.get(database , params = self.params).json()
+        metadata = requests.get(database , params = params).json()
         for item in metadata['files']:
             datas.append(item.copy())
         return datas
@@ -25,20 +28,23 @@ class Metadata:
             if 'parents' in item:
                 for parents in item['parents']:
                     if not parents in ids:
-                        parentsItem = requests.get(database + '/' + parents , params = self.params).json()                       
+                        parentsItem = requests.get(database + '/' + parents , params = params).json()                       
                         if not 'parents' in parents:
                             roots.append(parentsItem.copy())
                         ids[parentsItem['id']] = parentsItem['name']
         return roots
 
-    def get_full_data_with_path(self , roots):
+    def get_data_with_path(self):
+        files = self.get_user_data_info()
+        roots = self.get_data_root(files)
+
         full_data=[]
         for root in roots:
-            _get_data_and_path_from_root(root , full_data , '/' + root['name'] , self.params)
+            _get_data_and_path_from_root(root , full_data , '/' + root['name'] , params)
         return full_data
 
     def get_edited_files(self , metadatas):
-        file = "edit_date_saver.txt"
+        file = "edit_date_save.txt"
         edited_files = []
         last_edit_date = {}
         if not os.path.isfile(file):
@@ -63,7 +69,7 @@ class Metadata:
         return edited_files
 
     def save_edit_date(self , metadata):
-        file = "edit_date_saver.txt"
+        file = "edit_date_save.txt"
         f = open(file , "w")
         for item in metadata:
             f.write(item['id'] + "," + item['modifiedTime'])
@@ -79,10 +85,13 @@ def _get_data_and_path_from_root(root , fill_list , path , params):
     children = requests.get(database + query , params = params).json()
     for child in children['files']:
         child_name = _fileNameCheck(child['name'])
-        child['path'] = path + '/' + child_name
-        fill_list.append(child.copy())
-        if child['mimeType'] == "application/vnd.google-apps.folder":       
+        if child['mimeType'] == "application/vnd.google-apps.folder":          
+            child['path'] = path + '/' + child_name + '/'
+            fill_list.append(child.copy())
             _get_data_and_path_from_root(child , fill_list , path + '/' + child_name , params)
+        else:
+            child['path'] = path + '/' + child_name
+            fill_list.append(child.copy())
     return
 
 def _fileNameCheck(fileName):

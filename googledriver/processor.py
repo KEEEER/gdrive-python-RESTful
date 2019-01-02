@@ -4,8 +4,14 @@ import os
 database = 'https://www.googleapis.com/drive/v3/files/'
 download = '?alt=media&access_token='
 
-class Processor:
+params = {
+    'access_token' : "no",
+    'fields' : "*"
+}
 
+class Processor:
+    # create_folders
+    # download_files
 
     def __init__(self , metadata):
         self.metadata = metadata
