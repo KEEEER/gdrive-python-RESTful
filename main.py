@@ -19,7 +19,7 @@ database = 'https://www.googleapis.com/drive/v3/files'
 
 def main():
 
-    to_path = "D:\github\gdrive-python-download-REST/dl-folders_and_files"
+    to_path = "your download path"
     
     meta_list = read('local.properties')
     client_id = meta_list['client_id']
