@@ -2,3 +2,4 @@ local.properties
 edit_date_saver.txt
 dl-folders_and_files
 path_loader_main.py
+__pycache__

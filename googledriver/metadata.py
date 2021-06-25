@@ -40,7 +40,9 @@ class Metadata:
 
         full_data=[]
         for root in roots:
-            _get_data_and_path_from_root(root , full_data , '/' + root['name'] , params)
+            if root['name'] == '我的雲端硬碟':
+                print('found')
+                _get_data_and_path_from_root(root , full_data , '/' + root['name'] , params)
         return full_data
 
     def get_edited_files(self , metadatas):

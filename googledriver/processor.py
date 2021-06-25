@@ -1,9 +1,8 @@
 import requests
 import os
+import io
 
 database = 'https://www.googleapis.com/drive/v3/files/'
-download = '?alt=media&access_token='
-
 params = {
     'access_token' : "no",
     'fields' : "*"
@@ -28,27 +27,36 @@ class Processor:
         return
 
     def download_files(self , access_token , to_path):
+        header = {'Authorization': 'Bearer {}'.format(access_token)}
         for item in self.metadata:
-            #if not folder
+
             if not item['mimeType'] == "application/vnd.google-apps.folder":
-                #if file not downloaded
-                if not os.path.isfile(item['path']):       
-                    url = database + item['id'] + download + access_token 
-                    responds = requests.get(url)
-                    print("downloading : {}".format(item['name']))
+                if 'size' in item:
+                    if int(item['size']) > 2000000000:
+                        print('ignore large file(issue fixing) : ' + item['name'])
+                        continue
+
+                if not os.path.isfile(item['path']):
+                    url = database + item['id'] + '?alt=media'
+                    response = requests.get(url, headers=header)
                     try:
+                        CHUNK_SIZE = 32768
                         if item["mimeType"] == "application/vnd.google-apps.spreadsheet":
                             file = open(to_path + item['path'] , "w")
-                            file.write(responds.text)
+                            print("downloading spread : {}".format(item['name']))
+                            for chunk in response.iter_content(CHUNK_SIZE):
+                                if chunk:
+                                    file.write(chunk)
+
                         #if not google spreadsheet use "wb"
-                        else :
+                        else:
                             file = open(to_path + item['path'] , "wb")
-                            file.write(responds.content)
-                        file.close()
+                            print("downloading : {}".format(item['name']))
+                            for chunk in response.iter_content(CHUNK_SIZE):
+                                if chunk:
+                                    file.write(chunk)           
                     except Exception:
                         print("already exist or already delete")
-                    
-                #if download check edit date
 
         return
 #=======================================================================================
